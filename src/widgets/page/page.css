@@ -1,0 +1,20 @@
+.page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-header {
+    width: 100%;
+    height: 48px;
+    padding: 0px 130px 0px 12px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.page-body {
+    display: flex;
+    flex: 1;
+}

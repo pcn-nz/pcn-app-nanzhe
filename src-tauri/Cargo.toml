@@ -1,0 +1,26 @@
+[package]
+name = "nanzhe"
+version = "1.0.0"
+description = "网络图片浏览"
+authors = ["Nanzhe Team"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "2.0.0-beta", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0-beta", features = [] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rusqlite = { version = "0.31.0", features = ["bundled"] }
+tauri-plugin-shell = "2.0.0-beta.3"
+tauri-plugin-http = {version="2.0.0-beta.7",features = ["blocking"] }
+scraper = "0.19.0"
+tauri-plugin-fs = "2.0.0-beta.7"
+
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]

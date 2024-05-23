@@ -1,0 +1,38 @@
+.window-control-box {
+    width: 120px;
+    height: 48px;
+    display: flex;
+    position: fixed;
+    top: 3px;
+    right: 12px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+}
+
+.window-control-btn {
+    width: 30px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    border-radius: 8px;
+}
+
+.window-control-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+
+}
+
+.window-control-btn:active {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.window-control-btn-close:hover {
+    background: red;
+}
+
+.window-control-btn-close:hover svg {
+    fill: white;
+}
