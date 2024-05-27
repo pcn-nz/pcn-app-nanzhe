@@ -39,7 +39,7 @@ const LeftBox: React.FC<LeftBoxProps> = props => {
                 <List
                     size="small"
                     dataSource={props.urls}
-                    renderItem={(item, index) => <List.Item style={props.activeIndex == index ? { color: "red" } : undefined} onClick={() => props.onClick(item, index)}>{item[1]}</List.Item>}
+                    renderItem={(item, index) => <List.Item style={props.activeIndex == index ? { color: "#eb2f96" } : undefined} onClick={() => props.onClick(item, index)}>{item[1]}</List.Item>}
                 />
             </ScrollBox>
         </div>

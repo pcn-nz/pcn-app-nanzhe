@@ -81,11 +81,11 @@
 }
 
 .ant-list-item:hover {
-  color: brown;
+  color: #ffadd2;
 }
 
 .ant-list-item:active {
-  color: red;
+  color: #eb2f96;
 }
 
 .title {

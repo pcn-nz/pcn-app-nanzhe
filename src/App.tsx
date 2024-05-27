@@ -56,7 +56,12 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <ConfigProvider locale={zhCN}>
+      <ConfigProvider locale={zhCN} theme={{
+        token: {
+          // Seed Token，影响范围大
+          colorPrimary: '#eb2f96'
+        },
+      }}>
         <Window isMaximized={isMaximized} close={close} minimize={minimize} toggleMaximize={toggleMaximize} leftStyle={{ width: "80px", padding: "5px 12px 12px 12px", background: "white" }}
           leftbox={<LeftBar />}>
           <Routes>
