@@ -26,9 +26,12 @@
     },
     "windows": [
       {
+        "label": "main",
         "title": "南辙",
-        "minWidth": 1100,
+        "minWidth": 683,
         "minHeight": 700,
+        "width": 1100,
+        "height": 700,
         "decorations": false,
         "transparent": true,
         "center": true

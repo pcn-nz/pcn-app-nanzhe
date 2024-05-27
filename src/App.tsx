@@ -9,6 +9,7 @@ import HomePage from "./pages/home-page";
 import { PictureOutlined, StarOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import logo from './assets/logo.png';
 import VideoPage from "./pages/video-page";
+import PlayerPage from "./pages/player-page";
 
 const appWindow = new MainWindow('main');
 const App: React.FC = () => {
@@ -60,7 +61,8 @@ const App: React.FC = () => {
           leftbox={<LeftBar />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/video" element={<VideoPage/>} />
+            <Route path="/video" element={<VideoPage />} />
+            <Route path="/video/player" element={<PlayerPage />} />
           </Routes>
         </Window>
       </ConfigProvider>

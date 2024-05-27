@@ -3,7 +3,7 @@ import Page from "../../widgets/page";
 import { Button, Flex, Space, Image, Spin } from "antd";
 import ScrollBox from "../../widgets/scroll-box";
 import './home-page.css';
-import { DownloadOutlined } from "@ant-design/icons";
+import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
 import LeftBox from "./left-bar";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -76,6 +76,7 @@ const HomePage: React.FC = () => {
           <Flex justify="space-between" style={{ width: "100%", overflow: "hidden" }} data-tauri-drag-region>
             <Space>
               <Button icon={<DownloadOutlined />} onClick={handleDownload}></Button>
+              <Button icon={<HeartOutlined />} onClick={handleDownload}></Button>
               <div className="title" data-tauri-drag-region>{title}</div>
             </Space>
           </Flex>
@@ -95,7 +96,7 @@ const HomePage: React.FC = () => {
                             }}
                         >
                             {
-                                images.map((item, index) => <div key={index} className="list-card"><Image src={item} /></div>)
+                                images.map((item, index) => <div key={index} className="list-card list-card-square"><Image src={item} /></div>)
                             }
                         </Image.PreviewGroup>
                     </Flex>
