@@ -71,12 +71,16 @@ const HomePage: React.FC = () => {
         getUrls(baseUrl, 1, value);
     }
 
+    const addFavorite=()=>{
+        // todo
+    }
+
     const Header: React.FC = () => {
         return (
           <Flex justify="space-between" style={{ width: "100%", overflow: "hidden" }} data-tauri-drag-region>
             <Space>
               <Button icon={<DownloadOutlined />} onClick={handleDownload}></Button>
-              <Button icon={<HeartOutlined />} onClick={handleDownload}></Button>
+              <Button icon={<HeartOutlined />} onClick={addFavorite}></Button>
               <div className="title" data-tauri-drag-region>{title}</div>
             </Space>
           </Flex>

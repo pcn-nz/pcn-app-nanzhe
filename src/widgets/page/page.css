@@ -12,6 +12,7 @@
     display: flex;
     align-items: center;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .page-body {

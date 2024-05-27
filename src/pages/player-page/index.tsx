@@ -3,6 +3,8 @@ import Page from "../../widgets/page";
 import Player from "xgplayer/es/player";
 import { useSearchParams } from "react-router-dom";
 import './player-page.css';
+import { Button, Space } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const PlayerPage: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -14,8 +16,16 @@ const PlayerPage: React.FC = () => {
         });
     }, [])
 
+    const backToVideoList=()=>{
+        // todo
+    }
+
     return (
-        <Page>
+        <Page header={
+            <Space>
+                <Button icon={<ArrowLeftOutlined />} onClick={backToVideoList}></Button>
+            </Space>
+        }>
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flex: 1 }}>
                 <div id="mse"></div>
             </div>
