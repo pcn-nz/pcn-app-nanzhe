@@ -8,6 +8,11 @@ use scraper::{Html, Selector};
 use tauri_plugin_http::reqwest;
 
 #[tauri::command]
+pub fn get_config() -> bool {
+    Path::new("config.toml").exists()
+}
+
+#[tauri::command]
 pub async fn get_urls(url: String) -> Vec<(String, String)> {
     let mut urls: Vec<(String, String)> = Vec::new();
     let html = get_html(url).await;

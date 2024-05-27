@@ -13,7 +13,8 @@ fn main() {
             commands::get_images,
             commands::get_base_url,
             commands::images_download,
-            commands::get_video_list
+            commands::get_video_list,
+            commands::get_config
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
