@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>播放页</title>
+    <style>
+        video::-webkit-media-controls-fullscreen-button {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body style="background: black;display: flex;align-items: center;justify-content: center;">
+    <video id="video_player" controls controlslist="nofullscreen"></video>
+
+    <script type="module">
+        import { listen } from './node_modules/@tauri-apps/api/event.js';
+        import { Store } from './node_modules/@tauri-apps/plugin-store/dist-js/index.js';
+        const video_el = document.getElementById("video_player");
+        listen("change_video", (event) => {
+            video_el.setAttribute("src", event.payload.url);
+        });
+        const store = new Store('store.bin');
+        const val = await store.get('video_url');
+        video_el.setAttribute("src", val);
+        video_el.requestFullscreen();
+    </script>
+</body>
+
+</html>

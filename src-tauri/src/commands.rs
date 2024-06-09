@@ -5,41 +5,67 @@ use std::{
 };
 
 use scraper::{Html, Selector};
+use serde::{Deserialize, Serialize};
+use tauri::{Manager, WebviewWindowBuilder};
 use tauri_plugin_http::reqwest;
 
-#[tauri::command]
-pub fn get_config() -> bool {
-    Path::new("config.toml").exists()
+#[derive(Deserialize, Debug, Serialize)]
+struct Redis {
+    host: String,
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum CommandError {
+    #[error(transparent)]
+    Http(#[from] reqwest::Error),
+
+    #[error(transparent)]
+    Tauri(#[from] tauri::Error),
+}
+
+impl serde::Serialize for CommandError {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::ser::Serializer,
+    {
+        serializer.serialize_str(self.to_string().as_ref())
+    }
 }
 
 #[tauri::command]
-pub async fn get_urls(url: String) -> Vec<(String, String)> {
+pub fn get_config() -> bool {
+    // let mut config = File::create("config.toml").unwrap();
+    true
+}
+
+#[tauri::command]
+pub async fn get_urls(url: String) -> Result<Vec<(String, String)>, CommandError> {
     let mut urls: Vec<(String, String)> = Vec::new();
-    let html = get_html(url).await;
+    let html = get_html(url).await?;
     let selector = Selector::parse("table#ajaxtable tbody tr td h3 a").unwrap();
     for el in html.select(&selector) {
         urls.push((el.attr("href").unwrap().to_string(), el.inner_html()));
     }
-    urls
+    Ok(urls)
 }
 
 #[tauri::command]
-pub async fn get_images(url: String) -> Vec<String> {
+pub async fn get_images(url: String) -> Result<Vec<String>, CommandError> {
     let mut images: Vec<String> = Vec::new();
-    let html = get_html(url).await;
+    let html = get_html(url).await?;
     let selector = Selector::parse("div#read_tpc img").unwrap();
     for el in html.select(&selector) {
         images.push(el.attr("src").unwrap().to_string())
     }
-    images
+    Ok(images)
 }
 
 #[tauri::command]
-pub async fn get_base_url() -> String {
+pub async fn get_base_url() -> Result<String, CommandError> {
     let default_url = String::from("https://xp.1024hgc.org/bbs.php");
-    let res = reqwest::get(default_url).await.unwrap();
+    let res = reqwest::get(default_url).await?;
     let url = res.url();
-    format!("https://{}{}", url.domain().unwrap(), url.path())
+    Ok(format!("https://{}{}", url.domain().unwrap(), url.path()))
 }
 
 #[tauri::command]
@@ -62,26 +88,35 @@ pub async fn images_download(images: Vec<String>, dir: String) -> bool {
 }
 
 #[tauri::command]
-pub async fn get_video_list(url: String) -> Vec<(String, String, String)> {
+pub async fn get_video_list(url: String) -> Result<Vec<(String, String, String)>, CommandError> {
     let mut video_list: Vec<(String, String, String)> = Vec::new();
-    let html = get_html(url).await;
+    let html = get_html(url).await?;
     let selector = Selector::parse("div#app a.videoBox").unwrap();
     let el_selector = Selector::parse("div.videoBox_wrap").unwrap();
     for el in html.select(&selector) {
         for element in el.select(&el_selector) {
+            // println!("图片地址：{:?}",element.html()[133..161].to_string());
             video_list.push((
-                el.attr("title").unwrap().to_string(),
+                // el.attr("title").unwrap().to_string(),
+                "".to_string(),
                 el.attr("href").unwrap().to_string(),
                 element.html()[133..161].to_string(),
             ))
         }
     }
-
-    video_list
+    Ok(video_list)
 }
 
-async fn get_html(url: String) -> Html {
-    let res = reqwest::get(url).await.unwrap();
+#[tauri::command]
+pub async fn open_player(app: tauri::AppHandle) -> Result<(), CommandError> {
+    let builder =
+        WebviewWindowBuilder::new(&app, "player", tauri::WebviewUrl::App("player.html".into()));
+    builder.title("Player").center().build()?;
+    Ok(())
+}
+
+async fn get_html(url: String) -> Result<Html, reqwest::Error> {
+    let res = reqwest::get(url).await?;
     let html = Html::parse_document(&res.text().await.unwrap());
-    html
+    Ok(html)
 }

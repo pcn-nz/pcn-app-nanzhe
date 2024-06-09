@@ -4,7 +4,7 @@
   "description": "Capability for the main window",
   "local": true,
   "windows": [
-    "main"
+    "main","player"
   ],
   "permissions": [
     "window:default",
@@ -13,6 +13,13 @@
     "window:allow-minimize",
     "window:allow-close",
     "window:allow-start-dragging",
-    "window:allow-toggle-maximize"
+    "window:allow-toggle-maximize",
+    "event:default",
+    "event:allow-emit",
+    "event:allow-listen",
+    "store:allow-get",
+    "store:allow-set",
+    "store:allow-save",
+    "store:allow-load"
   ]
 }

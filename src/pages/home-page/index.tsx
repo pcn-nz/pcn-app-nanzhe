@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Page from "../../widgets/page";
-import { Button, Flex, Space, Image, Spin } from "antd";
+import { Button, Flex, Space, Image, Spin, message } from "antd";
 import ScrollBox from "../../widgets/scroll-box";
 import './home-page.css';
 import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
@@ -13,15 +13,20 @@ const HomePage: React.FC = () => {
     let [activeIndex, setActiveIndex] = useState(undefined as undefined | number);
     let [baseUrl, setBaseUrl] = useState("");
     let [pageIndex, setPageIndex] = useState(1);
-    let [spinning, setSpinning] = React.useState<boolean>(true);
+    let [spinning, setSpinning] = useState<boolean>(true);
     const [title, setTitle] = useState("");
     const [fid, setFid] = useState(14);
 
     useEffect(() => {
         (async () => {
-            let baseUrl = await invoke("get_base_url");
-            setBaseUrl(baseUrl as string);
-            getUrls(baseUrl as string, 1, 14);
+            try {
+                let baseUrl = await invoke("get_base_url");
+                setBaseUrl(baseUrl as string);
+                getUrls(baseUrl as string, 1, 14);
+            } catch (err) {
+                message.error(err as any);
+                setSpinning(false);
+            }
         })();
     }, []);
 
@@ -29,20 +34,30 @@ const HomePage: React.FC = () => {
         setUrls([]);
         setActiveIndex(undefined);
         setSpinning(true);
-        let res: Array<[string, string]> = await invoke("get_urls", { url: url + "thread1022.php?fid=" + sfid + "&page=" + pageIndex });
-        if (pageIndex == 1) {
-            res.splice(0, 3)
+        try {
+            let res: Array<[string, string]> = await invoke("get_urls", { url: url + "thread1022.php?fid=" + sfid + "&page=" + pageIndex });
+            if (pageIndex == 1) {
+                res.splice(0, 3)
+            }
+            setUrls(res);
+            setSpinning(false);
+        } catch (error) {
+            setSpinning(false);
+            message.error(error as any)
         }
-        setUrls(res);
-        setSpinning(false);
+
     }
 
     const getImages = async (item: [string, string], index: number) => {
         setImages([]);
         setSpinning(true);
         setTitle("");
-        let res = await invoke("get_images", { url: baseUrl + item[0] });
-        setImages(res as Array<string>);
+        try{
+            let res = await invoke("get_images", { url: baseUrl + item[0] });
+            setImages(res as Array<string>);
+        }catch(error){
+            message.error(error as any)
+        }
         setActiveIndex(index);
         setTitle(item[1]);
         setSpinning(false);
@@ -71,27 +86,27 @@ const HomePage: React.FC = () => {
         getUrls(baseUrl, 1, value);
     }
 
-    const addFavorite=()=>{
+    const addFavorite = () => {
         // todo
     }
 
     const Header: React.FC = () => {
         return (
-          <Flex justify="space-between" style={{ width: "100%", overflow: "hidden" }} data-tauri-drag-region>
-            <Space>
-              <Button icon={<DownloadOutlined />} onClick={handleDownload}></Button>
-              <Button icon={<HeartOutlined />} onClick={addFavorite}></Button>
-              <div className="title" data-tauri-drag-region>{title}</div>
-            </Space>
-          </Flex>
-    
+            <Flex justify="space-between" style={{ width: "100%", overflow: "hidden" }} data-tauri-drag-region>
+                <Space>
+                    <Button icon={<DownloadOutlined />} onClick={handleDownload}></Button>
+                    <Button icon={<HeartOutlined />} onClick={addFavorite}></Button>
+                    <div className="title" data-tauri-drag-region>{title}</div>
+                </Space>
+            </Flex>
+
         )
-      }
+    }
 
     return (
         <div className="container">
             <LeftBox onClick={getImages} activeIndex={activeIndex} urls={urls} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} handleChangeChannel={handleChangeChannel} />
-            <Page header={<Header />}>
+            <Page header={<Header />} style={{paddingRight:"8px"}}>
                 <ScrollBox style={{ padding: "12px" }}>
                     <Flex wrap="wrap" gap="small">
                         <Image.PreviewGroup
