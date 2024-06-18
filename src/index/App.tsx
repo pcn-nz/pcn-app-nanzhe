@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import Window from "./widgets/window";
+import Window from "../widgets/window";
 import "./App.css";
 import { Window as MainWindow } from '@tauri-apps/api/window';
 import { useNavigate, NavLink, Route, Routes } from "react-router-dom";
 import { ConfigProvider, Space } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import HomePage from "./pages/home-page";
-import { PictureOutlined, StarOutlined, VideoCameraOutlined } from "@ant-design/icons";
-import logo from './assets/logo.png';
+import { PictureOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import logo from '../assets/logo.png';
 import VideoPage from "./pages/video-page";
-import PlayerPage from "./pages/player-page";
 import { invoke } from "@tauri-apps/api/core";
 import ConfigPage from "./pages/config-page";
 
@@ -59,9 +58,9 @@ const App: React.FC = () => {
         <NavLink className="left-nav-btn" to={"/video?pageIndex=1"}>
           <VideoCameraOutlined />
         </NavLink>
-        <NavLink className="left-nav-btn" to={"/star"}>
+        {/*<NavLink className="left-nav-btn" to={"/star"}>
           <StarOutlined />
-        </NavLink>
+        </NavLink>*/}
       </Space>
     )
   }
@@ -78,7 +77,6 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/images" element={<HomePage />} />
           <Route path="/video" element={<VideoPage />} />
-          <Route path="/video/player" element={<PlayerPage />} />
           <Route path="/config" element={<ConfigPage />} />
         </Routes>
       </Window>

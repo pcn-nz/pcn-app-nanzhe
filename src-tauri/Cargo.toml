@@ -1,6 +1,6 @@
 [package]
 name = "nanzhe"
-version = "1.0.0"
+version = "1.0.1"
 description = "网络图片浏览"
 authors = ["Nanzhe Team"]
 edition = "2021"
@@ -22,6 +22,7 @@ tauri-plugin-fs = "2.0.0-beta.7"
 tauri-plugin-store = "2.0.0-beta.7"
 tauri-plugin-log = "2.0.0-beta.5"
 thiserror = "1.0"
+regex = "1.10.5"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

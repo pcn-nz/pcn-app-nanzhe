@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Page from "../../widgets/page";
+import Page from "../../../widgets/page";
 import { Button, Flex, Space, Image, Spin, message } from "antd";
-import ScrollBox from "../../widgets/scroll-box";
+import ScrollBox from "../../../widgets/scroll-box";
 import './home-page.css';
-import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
+import { DownloadOutlined } from "@ant-design/icons";
 import LeftBox from "./left-bar";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -86,16 +86,16 @@ const HomePage: React.FC = () => {
         getUrls(baseUrl, 1, value);
     }
 
-    const addFavorite = () => {
-        // todo
-    }
+    // const addFavorite = () => {
+    //     // todo
+    // }
 
     const Header: React.FC = () => {
         return (
             <Flex justify="space-between" style={{ width: "100%", overflow: "hidden" }} data-tauri-drag-region>
                 <Space>
                     <Button icon={<DownloadOutlined />} onClick={handleDownload}></Button>
-                    <Button icon={<HeartOutlined />} onClick={addFavorite}></Button>
+                    {/* <Button icon={<HeartOutlined />} onClick={addFavorite}></Button> */}
                     <div className="title" data-tauri-drag-region>{title}</div>
                 </Space>
             </Flex>

@@ -1,0 +1,32 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+
+video::-webkit-media-controls-fullscreen-button {
+    display: none;
+}
+
+video::-webkit-media-controls-enclosure {
+    overflow: hidden;
+}
+
+video {
+    width: 100%;
+}
+
+.window-control-btn svg {
+    fill: white;
+}
+
+.window-control-btn:hover {
+    background: rgba(255, 255, 255, 0.24) !important;
+}
+
+.window-control-btn-close:hover {
+    background: red !important;
+}

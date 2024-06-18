@@ -1,5 +1,5 @@
 import { Button, List, Select, Space } from "antd"
-import ScrollBox from "../../widgets/scroll-box"
+import ScrollBox from "../../../widgets/scroll-box"
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 type LeftBoxProps = {

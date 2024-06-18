@@ -8,18 +8,20 @@ interface WindowProps {
     close?: () => void;
     toggleMaximize?: () => void;
     minimize?: () => void;
-    leftbox?: ReactNode;
+    leftbox?: ReactNode | null;
     leftStyle?: React.CSSProperties | undefined;
+    style?: React.CSSProperties | undefined;
 }
 
 const Window: React.FC<WindowProps> = (props) => {
-    return <div className='window'>
+    return <div className='window' style={props.style}>
         <WindowCtroll isMaximized={props.isMaximized} minimize={props.minimize} toggleMaximize={props.toggleMaximize} close={props.close} />
-        <div className='left-box' style={props.leftStyle}>
-            <div className='left-box-body' data-tauri-drag-region>
-                {props.leftbox}
-            </div>
-        </div>
+        {props.leftbox === null ? null :
+            <div className='left-box' style={props.leftStyle}>
+                <div className='left-box-body' data-tauri-drag-region>
+                    {props.leftbox}
+                </div>
+            </div>}
         <div className="right-box">
             <div className='right-box-body' data-tauri-drag-region>
                 {props.children}

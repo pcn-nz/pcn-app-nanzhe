@@ -30,7 +30,7 @@
 }
 
 .window-control-btn-close:hover {
-    background: red;
+    background: red !important;
 }
 
 .window-control-btn-close:hover svg {
