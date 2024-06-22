@@ -86,14 +86,15 @@ const VideoPage: React.FC = () => {
 
     return (
         <Page header={<Header onChange={changeChannel} />} style={{ paddingRight: "8px" }}>
-            <ScrollBox style={{ padding: "12px" }} onScroll={handleLoadMore}>
-                <Flex wrap="wrap" gap="small">
-                    {
-                        videoList.map((item, index) => <div key={index} className="list-card list-card-rect" onClick={() => openPlayer(base_video + item[2].slice(0, item[2].length - 4))}><img src={"https://ncinci-jpjso.com" + item[2]} /></div>)
-                    }
-                </Flex>
-            </ScrollBox>
-            <Spin spinning={spinning} fullscreen size="large" />
+            <Spin spinning={spinning} size="large">
+                <ScrollBox style={{ padding: "12px" }} onScroll={handleLoadMore}>
+                    <Flex wrap="wrap" gap="small">
+                        {
+                            videoList.map((item, index) => <div key={index} className="list-card list-card-rect" onClick={() => openPlayer(base_video + item[2].slice(0, item[2].length - 4))}><img src={"https://ncinci-jpjso.com" + item[2]} /></div>)
+                        }
+                    </Flex>
+                </ScrollBox>
+            </Spin>
         </Page>
     )
 }

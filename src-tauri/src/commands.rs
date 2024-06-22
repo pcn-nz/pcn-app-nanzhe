@@ -66,7 +66,6 @@ pub async fn get_base_url() -> Result<String, CommandError> {
     let default_url = String::from("https://xp.1024hgc.org/bbs.php");
     let res = reqwest::get(default_url).await?;
     let url = res.url();
-    println!("获取的网址：{:?}", url);
     let url_path = url.path().to_string();
     Ok(format!(
         "https://{}{}",

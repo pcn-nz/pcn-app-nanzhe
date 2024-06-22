@@ -52,10 +52,10 @@ const HomePage: React.FC = () => {
         setImages([]);
         setSpinning(true);
         setTitle("");
-        try{
+        try {
             let res = await invoke("get_images", { url: baseUrl + item[0] });
             setImages(res as Array<string>);
-        }catch(error){
+        } catch (error) {
             message.error(error as any)
         }
         setActiveIndex(index);
@@ -106,22 +106,24 @@ const HomePage: React.FC = () => {
     return (
         <div className="container">
             <LeftBox onClick={getImages} activeIndex={activeIndex} urls={urls} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} handleChangeChannel={handleChangeChannel} />
-            <Page header={<Header />} style={{paddingRight:"8px"}}>
-                <ScrollBox style={{ padding: "12px" }}>
-                    <Flex wrap="wrap" gap="small">
-                        <Image.PreviewGroup
-                            preview={{
-                                onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
-                            }}
-                        >
-                            {
-                                images.map((item, index) => <div key={index} className="list-card list-card-square"><Image src={item} /></div>)
-                            }
-                        </Image.PreviewGroup>
-                    </Flex>
-                </ScrollBox>
+            <Page header={<Header />} style={{ paddingRight: "8px" }}>
+                <Spin spinning={spinning} size="large">
+                    <ScrollBox style={{ padding: "12px" }}>
+                        <Flex wrap="wrap" gap="small">
+                            <Image.PreviewGroup
+                                preview={{
+                                    onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
+                                }}
+                            >
+                                {
+                                    images.map((item, index) => <div key={index} className="list-card list-card-square"><Image src={item} /></div>)
+                                }
+                            </Image.PreviewGroup>
+                        </Flex>
+                    </ScrollBox>
+                </Spin>
             </Page>
-            <Spin spinning={spinning} fullscreen size="large" />
+
         </div>
     )
 }

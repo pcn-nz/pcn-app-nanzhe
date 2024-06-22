@@ -138,3 +138,9 @@
 .logo img {
   width: 80%;
 }
+
+.ant-spin-container,
+.ant-spin-nested-loading {
+  width: 100%;
+  height: 100%;
+}
