@@ -1,0 +1,26 @@
+{
+    "assignments": [
+        {
+            "url": "https://xp.1024hgc.org/bbs.php",
+            "type": "img",
+            "selector": [
+                {
+                    "type": "domian",
+                    "regex": "",
+                    "event": ""
+                }
+            ]
+        },
+        {
+            "url": "https://xp.1024hgc.org/bbs.php",
+            "type": "img",
+            "selector": [
+                {
+                    "type": "domian",
+                    "regex": "",
+                    "event": ""
+                }
+            ]
+        }
+    ]
+}

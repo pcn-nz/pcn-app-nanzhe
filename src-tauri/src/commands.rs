@@ -4,6 +4,7 @@ use std::{
     path::Path,
 };
 
+use crate::Assignment;
 use regex::Regex;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
@@ -35,15 +36,17 @@ impl serde::Serialize for CommandError {
 
 #[tauri::command]
 pub fn get_config() -> bool {
-    // let mut config = File::create("config.toml").unwrap();
     true
 }
 
 #[tauri::command]
-pub async fn get_urls(url: String) -> Result<Vec<(String, String)>, CommandError> {
+pub async fn get_urls(
+    state: tauri::State<'_, Assignment>,
+    url: String,
+) -> Result<Vec<(String, String)>, CommandError> {
     let mut urls: Vec<(String, String)> = Vec::new();
     let html = get_html(url).await?;
-    let selector = Selector::parse("table#ajaxtable tbody tr td h3 a").unwrap();
+    let selector = Selector::parse(&state.assignments[0].selector[0]).unwrap();
     for el in html.select(&selector) {
         urls.push((el.attr("href").unwrap().to_string(), el.inner_html()));
     }
@@ -51,10 +54,13 @@ pub async fn get_urls(url: String) -> Result<Vec<(String, String)>, CommandError
 }
 
 #[tauri::command]
-pub async fn get_images(url: String) -> Result<Vec<String>, CommandError> {
+pub async fn get_images(
+    state: tauri::State<'_, Assignment>,
+    url: String,
+) -> Result<Vec<String>, CommandError> {
     let mut images: Vec<String> = Vec::new();
     let html = get_html(url).await?;
-    let selector = Selector::parse("div#read_tpc img").unwrap();
+    let selector = Selector::parse(&state.assignments[0].selector[1]).unwrap();
     for el in html.select(&selector) {
         images.push(el.attr("src").unwrap().to_string())
     }
@@ -62,8 +68,8 @@ pub async fn get_images(url: String) -> Result<Vec<String>, CommandError> {
 }
 
 #[tauri::command]
-pub async fn get_base_url() -> Result<String, CommandError> {
-    let default_url = String::from("https://xp.1024hgc.org/bbs.php");
+pub async fn get_base_url(state: tauri::State<'_, Assignment>) -> Result<String, CommandError> {
+    let default_url = String::from(state.assignments[0].url.to_string());
     let res = reqwest::get(default_url).await?;
     let url = res.url();
     let url_path = url.path().to_string();
@@ -94,11 +100,14 @@ pub async fn images_download(images: Vec<String>, dir: String) -> bool {
 }
 
 #[tauri::command]
-pub async fn get_video_list(url: String) -> Result<Vec<(String, String, String)>, CommandError> {
+pub async fn get_video_list(
+    state: tauri::State<'_, Assignment>,
+    url: String,
+) -> Result<Vec<(String, String, String)>, CommandError> {
     let mut video_list: Vec<(String, String, String)> = Vec::new();
     let html = get_html(url).await?;
-    let selector = Selector::parse("div#app a.videoBox").unwrap();
-    let el_selector = Selector::parse("div.videoBox_wrap").unwrap();
+    let selector = Selector::parse(&state.assignments[1].selector[0]).unwrap();
+    let el_selector = Selector::parse(&state.assignments[1].selector[1]).unwrap();
     let img_regex = Regex::new(r"/\d{5,8}/\d{1,5}/\d{1,5}/\d{1,5}\.mp4\.jpg").unwrap();
     let mut img_src = String::new();
     for el in html.select(&selector) {

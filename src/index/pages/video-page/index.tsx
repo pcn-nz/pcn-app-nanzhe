@@ -51,7 +51,6 @@ const VideoPage: React.FC = () => {
         }
         let vl = vls;
         vl = vl.concat(new_vl);
-        console.log(new_vl);
         setVideoList(vl);
         setPageIndex(pgi + 3);
         setSpinning(false);
