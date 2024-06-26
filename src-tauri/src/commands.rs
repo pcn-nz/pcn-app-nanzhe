@@ -103,25 +103,23 @@ pub async fn images_download(images: Vec<String>, dir: String) -> bool {
 pub async fn get_video_list(
     state: tauri::State<'_, Assignment>,
     url: String,
-) -> Result<Vec<(String, String, String)>, CommandError> {
-    let mut video_list: Vec<(String, String, String)> = Vec::new();
+) -> Result<Vec<(String, String)>, CommandError> {
+    let mut video_list: Vec<(String, String)> = Vec::new();
     let html = get_html(url).await?;
     let selector = Selector::parse(&state.assignments[1].selector[0]).unwrap();
-    let el_selector = Selector::parse(&state.assignments[1].selector[1]).unwrap();
     let img_regex = Regex::new(r"/\d{5,8}/\d{1,5}/\d{1,5}/\d{1,5}\.mp4\.jpg").unwrap();
-    let mut img_src = String::new();
+    let title_regex = Regex::new(r">&nbsp;.*&nbsp;</").unwrap();
+    let mut title_str = "";
     for el in html.select(&selector) {
-        for element in el.select(&el_selector) {
-            if let Some(i_src) = img_regex.find(&element.html().to_string()) {
-                img_src = i_src.as_str().to_string();
-            };
-            video_list.push((
-                // el.attr("title").unwrap().to_string(),
-                "".to_string(),
-                el.attr("href").unwrap().to_string(),
-                img_src.clone(),
-            ))
-        }
+        if let Some(i_src) = img_regex.find(&el.html()) {
+            if let Some(title) = title_regex.find(&el.html()) {
+                title_str = title.as_str();
+                video_list.push((
+                    title_str[7..title_str.len() - 8].to_string(),
+                    i_src.as_str().to_string(),
+                ))
+            }
+        };
     }
     Ok(video_list)
 }

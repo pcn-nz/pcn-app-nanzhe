@@ -1,6 +1,6 @@
 [package]
 name = "nanzhe"
-version = "1.0.0"
+version = "1.0.1"
 description = "爬虫工具"
 authors = ["Nanzhe Team"]
 edition = "2021"

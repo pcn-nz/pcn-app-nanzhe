@@ -1,7 +1,55 @@
 .list-card-rect {
-    aspect-ratio: 282/158;
+    aspect-ratio: 282/188;
 }
 
 .list-card img {
     width: 100%;
+    z-index: 490;
+    transition: width 0.5s;
+    position: absolute;
+    z-index: 490;
+    top: 0;
+}
+
+.list-card {
+    position: relative;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+}
+
+.list-card .list-card-title {
+    width: 100%;
+    height: 30px;
+    padding: 0px 8px;
+    line-height: 30px;
+    font-weight: 100;
+    background-color: rgba(255, 255, 255, 0.36);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    z-index: 500;
+    bottom: 0;
+    backdrop-filter: blur(10px);
+}
+
+.list-card .play-icon {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    position: absolute;
+    z-index: 495;
+    font-size: 3em;
+    color: #eb2f96;
+    padding-bottom: 30px;
+}
+
+.list-card:hover .play-icon {
+    display: flex;
+}
+
+.list-card:hover img {
+    width: 124%;
 }

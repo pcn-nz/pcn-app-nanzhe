@@ -6,6 +6,7 @@ import ScrollBox from "../../../widgets/scroll-box";
 import './video-page.css';
 import { emit } from "@tauri-apps/api/event";
 import { Store } from '@tauri-apps/plugin-store';
+import { PlayCircleOutlined } from "@ant-design/icons";
 
 const base_video = "https://ncdncd-sslmi.com";
 const base_video_list = "https://nc18x2.xyz";
@@ -89,7 +90,13 @@ const VideoPage: React.FC = () => {
                 <ScrollBox style={{ padding: "12px" }} onScroll={handleLoadMore}>
                     <Flex wrap="wrap" gap="small">
                         {
-                            videoList.map((item, index) => <div key={index} className="list-card list-card-rect" onClick={() => openPlayer(base_video + item[2].slice(0, item[2].length - 4))}><img src={"https://ncinci-jpjso.com" + item[2]} /></div>)
+                            videoList.map((item, index) => <div key={index} className="list-card list-card-rect" onClick={() => openPlayer(base_video + item[1].slice(0, item[1].length - 4))}>
+                                <img src={"https://ncinci-jpjso.com" + item[1]} />
+                                <div className="play-icon">
+                                    <PlayCircleOutlined />
+                                </div>
+                                <div className="list-card-title">{item[0]}</div>
+                            </div>)
                         }
                     </Flex>
                 </ScrollBox>
