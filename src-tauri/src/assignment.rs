@@ -1,14 +1,14 @@
 use serde::{Deserialize, Serialize};
 use std::{error::Error, fs::File, io::Read};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Assignment {
     pub assignments: Vec<AssignmentNode>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct AssignmentNode {
-    pub url: String,
+    pub url: Vec<String>,
     pub assignment_type: String,
     pub selector: Vec<String>,
 }

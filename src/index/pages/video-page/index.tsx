@@ -9,9 +9,7 @@ import { Store } from '@tauri-apps/plugin-store';
 import { DownloadOutlined, HeartOutlined, PlayCircleOutlined, StarOutlined } from "@ant-design/icons";
 import { Menu, Item, useContextMenu, Separator } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.css';
-
-const base_video = "https://ncdncd-sslmi.com";
-const base_video_list = "https://nc18x2.xyz";
+import { AssignmentNode } from "../../assignment";
 
 const store = new Store('store.bin');
 
@@ -27,30 +25,33 @@ const MENU_ID = 'rightMenu';
 
 const VideoPage: React.FC = () => {
 
-    const [videoList, setVideoList] = useState<Array<[string, string, string]>>([]);
+    const [videoList, setVideoList] = useState<Array<[string, string]>>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [channel, setChannel] = useState(2);
     const [spinning, setSpinning] = useState<boolean>(false);
+    const [config, setConfig] = useState<Array<AssignmentNode>>([]);
     const { show } = useContextMenu({
         id: MENU_ID,
     });
 
     useEffect(() => {
         (async () => {
-            await getVideoList(channel, videoList, pageIndex);
+            let cf: Array<AssignmentNode> = await invoke("get_config");
+            setConfig(cf);
+            await getVideoList(cf[1].url[0], channel, videoList, pageIndex);
         })();
     }, [])
 
-    const getVideoList = async (chann: number, vls: Array<[string, string, string]>, pgi: number) => {
+    const getVideoList = async (url: string, chann: number, vls: Array<[string, string]>, pgi: number) => {
         setSpinning(true);
-        let videos: Array<[string, string, string]> = [];
-        let new_vl: Array<[string, string, string]> = [];
+        let videos: Array<[string, string]> = [];
+        let new_vl: Array<[string, string]> = [];
         try {
             for (let i = pgi; i < (pgi + 3); i++) {
                 if (i == 1) {
-                    videos = await invoke("get_video_list", { url: `${base_video_list}/Html/${chann}/index.html` });
+                    videos = await invoke("get_video_list", { url: `${url}/Html/${chann}/index.html` });
                 } else {
-                    videos = await invoke("get_video_list", { url: `${base_video_list}/Html/${chann}/index-${i}.html` });
+                    videos = await invoke("get_video_list", { url: `${url}/Html/${chann}/index-${i}.html` });
                 }
                 new_vl = new_vl.concat(videos);
             }
@@ -70,7 +71,7 @@ const VideoPage: React.FC = () => {
         setVideoList([]);
         setPageIndex(1);
         setTimeout(() => { }, 1000);
-        await getVideoList(chan, [], 1);
+        await getVideoList(config[1].url[0], chan, [], 1);
     }
 
     const openPlayer = async (url: string) => {
@@ -85,7 +86,7 @@ const VideoPage: React.FC = () => {
     const handleLoadMore = async (e: any) => {
         let dom = e.target;
         if (dom.clientHeight + dom.scrollTop === dom.scrollHeight) {
-            await getVideoList(channel, videoList, pageIndex);
+            await getVideoList(config[1].url[0], channel, videoList, pageIndex);
         }
     }
 
@@ -101,13 +102,17 @@ const VideoPage: React.FC = () => {
                 <ScrollBox style={{ padding: "12px" }} onScroll={handleLoadMore}>
                     <Flex wrap="wrap" gap={12}>
                         {
-                            videoList.map((item, index) => <div key={index} style={{ background: `url(${"https://ncinci-jpjso.com" + item[1]})`, backgroundSize: "124%" }} className="list-card list-card-rect" onContextMenu={showContextMenu} onClick={() => openPlayer(base_video + item[1].slice(0, item[1].length - 4))}>
-                                <img src={"https://ncinci-jpjso.com" + item[1]} />
-                                <div className="play-icon" onContextMenu={show as any}>
-                                    <PlayCircleOutlined />
-                                </div>
-                                <div className="list-card-title">{item[0]}</div>
-                            </div>)
+                            videoList.map((item, index) =>
+                                <div key={index}
+                                    style={{ background: `url(${config[1].url[2] + item[1]})`, backgroundSize: "124%" }}
+                                    className="list-card list-card-rect" onContextMenu={showContextMenu}
+                                    onClick={() => openPlayer(config[1].url[1] + item[1].slice(0, item[1].length - 4))}>
+                                    <img src={config[1].url[2] + item[1]} />
+                                    <div className="play-icon" onContextMenu={show as any}>
+                                        <PlayCircleOutlined />
+                                    </div>
+                                    <div className="list-card-title">{item[0]}</div>
+                                </div>)
                         }
                     </Flex>
                 </ScrollBox>

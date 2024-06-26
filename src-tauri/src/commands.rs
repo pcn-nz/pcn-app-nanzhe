@@ -4,7 +4,7 @@ use std::{
     path::Path,
 };
 
-use crate::Assignment;
+use crate::{assignment::AssignmentNode, Assignment};
 use regex::Regex;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
@@ -35,8 +35,11 @@ impl serde::Serialize for CommandError {
 }
 
 #[tauri::command]
-pub fn get_config() -> bool {
-    true
+pub fn get_config(
+    state: tauri::State<'_, Assignment>,
+) -> Result<Vec<AssignmentNode>, CommandError> {
+    let assignments = state.assignments.clone();
+    Ok(assignments)
 }
 
 #[tauri::command]
@@ -69,7 +72,7 @@ pub async fn get_images(
 
 #[tauri::command]
 pub async fn get_base_url(state: tauri::State<'_, Assignment>) -> Result<String, CommandError> {
-    let default_url = String::from(state.assignments[0].url.to_string());
+    let default_url = &state.assignments[0].url[0];
     let res = reqwest::get(default_url).await?;
     let url = res.url();
     let url_path = url.path().to_string();
