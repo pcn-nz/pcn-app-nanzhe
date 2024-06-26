@@ -5,12 +5,14 @@ mod app_state;
 mod assignment;
 mod commands;
 
-use std::error::Error;
 use assignment::Assignment;
+use std::error::Error;
+use tauri_plugin_dialog::DialogExt;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let assignment: Assignment = Assignment::init()?;
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())

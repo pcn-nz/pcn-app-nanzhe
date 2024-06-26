@@ -6,7 +6,9 @@ import ScrollBox from "../../../widgets/scroll-box";
 import './video-page.css';
 import { emit } from "@tauri-apps/api/event";
 import { Store } from '@tauri-apps/plugin-store';
-import { PlayCircleOutlined } from "@ant-design/icons";
+import { DownloadOutlined, HeartOutlined, PlayCircleOutlined, StarOutlined } from "@ant-design/icons";
+import { Menu, Item, useContextMenu, Separator } from 'react-contexify';
+import 'react-contexify/dist/ReactContexify.css';
 
 const base_video = "https://ncdncd-sslmi.com";
 const base_video_list = "https://nc18x2.xyz";
@@ -21,12 +23,17 @@ const Header: React.FC<any> = props => {
     )
 }
 
+const MENU_ID = 'rightMenu';
+
 const VideoPage: React.FC = () => {
 
     const [videoList, setVideoList] = useState<Array<[string, string, string]>>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [channel, setChannel] = useState(2);
     const [spinning, setSpinning] = useState<boolean>(false);
+    const { show } = useContextMenu({
+        id: MENU_ID,
+    });
 
     useEffect(() => {
         (async () => {
@@ -82,17 +89,21 @@ const VideoPage: React.FC = () => {
         }
     }
 
-
+    const showContextMenu = (e: any) => {
+        show({
+            event: e,
+        });
+    }
 
     return (
         <Page header={<Header onChange={changeChannel} />} style={{ paddingRight: "8px" }}>
             <Spin spinning={spinning} size="large">
                 <ScrollBox style={{ padding: "12px" }} onScroll={handleLoadMore}>
-                    <Flex wrap="wrap" gap="small">
+                    <Flex wrap="wrap" gap={12}>
                         {
-                            videoList.map((item, index) => <div key={index} className="list-card list-card-rect" onClick={() => openPlayer(base_video + item[1].slice(0, item[1].length - 4))}>
+                            videoList.map((item, index) => <div key={index} style={{ background: `url(${"https://ncinci-jpjso.com" + item[1]})`, backgroundSize: "124%" }} className="list-card list-card-rect" onContextMenu={showContextMenu} onClick={() => openPlayer(base_video + item[1].slice(0, item[1].length - 4))}>
                                 <img src={"https://ncinci-jpjso.com" + item[1]} />
-                                <div className="play-icon">
+                                <div className="play-icon" onContextMenu={show as any}>
                                     <PlayCircleOutlined />
                                 </div>
                                 <div className="list-card-title">{item[0]}</div>
@@ -101,6 +112,27 @@ const VideoPage: React.FC = () => {
                     </Flex>
                 </ScrollBox>
             </Spin>
+
+            <Menu id={MENU_ID} animation="fade">
+                <Item>
+                    <PlayCircleOutlined />
+                    <span style={{ paddingLeft: "6px" }}>播放</span>
+                </Item>
+                <Item>
+                    <DownloadOutlined />
+                    <span style={{ paddingLeft: "6px" }}>下载</span>
+                </Item>
+                <Separator />
+                <Item>
+                    <StarOutlined />
+                    <span style={{ paddingLeft: "6px" }}>收藏</span>
+                </Item>
+                <Item>
+                    <HeartOutlined />
+                    <span style={{ paddingLeft: "6px" }}>喜欢</span>
+                </Item>
+            </Menu>
+
         </Page>
     )
 }

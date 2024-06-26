@@ -14,6 +14,11 @@ pub struct AssignmentNode {
 }
 
 impl Assignment {
+    pub fn new() -> Self {
+        Self {
+            assignments: Vec::new(),
+        }
+    }
     pub fn init() -> Result<Self, Box<dyn Error>> {
         let mut assignment_file = File::open("./assignment.json")?;
         let mut assignment_json_string = String::new();

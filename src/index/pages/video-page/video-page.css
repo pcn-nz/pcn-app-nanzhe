@@ -1,5 +1,5 @@
 .list-card-rect {
-    aspect-ratio: 282/188;
+    aspect-ratio: 282/190;
 }
 
 .list-card img {
@@ -13,7 +13,6 @@
 
 .list-card {
     position: relative;
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.12);
     cursor: pointer;
 }
 

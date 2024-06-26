@@ -110,11 +110,7 @@ const HomePage: React.FC = () => {
                 <Spin spinning={spinning} size="large">
                     <ScrollBox style={{ padding: "12px" }}>
                         <Flex wrap="wrap" gap="small">
-                            <Image.PreviewGroup
-                                preview={{
-                                    onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
-                                }}
-                            >
+                            <Image.PreviewGroup>
                                 {
                                     images.map((item, index) => <div key={index} className="list-card list-card-square"><Image src={item} /></div>)
                                 }
@@ -123,7 +119,6 @@ const HomePage: React.FC = () => {
                     </ScrollBox>
                 </Spin>
             </Page>
-
         </div>
     )
 }
