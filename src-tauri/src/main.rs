@@ -1,16 +1,15 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod app_state;
 mod assignment;
 mod commands;
 
 use assignment::Assignment;
 use std::error::Error;
-use tauri_plugin_dialog::DialogExt;
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let assignment: Assignment = Assignment::init()?;
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    let assignment = Assignment::init()?;
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::new().build())

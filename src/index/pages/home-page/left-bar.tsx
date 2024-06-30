@@ -1,4 +1,4 @@
-import { Button, List, Select, Space } from "antd"
+import { Button, List, Select, Space, Spin } from "antd"
 import ScrollBox from "../../../widgets/scroll-box"
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
@@ -9,6 +9,7 @@ type LeftBoxProps = {
     handlePrevPage?: () => void;
     handleNextPage?: () => void;
     handleChangeChannel?: (value: number) => void;
+    spinning?: boolean | undefined;
 }
 
 const LeftBox: React.FC<LeftBoxProps> = props => {
@@ -18,7 +19,7 @@ const LeftBox: React.FC<LeftBoxProps> = props => {
     }
 
     return (
-        <div style={{ display: "flex", width: "300px", height: "100%",padding:"0px 0px 0px 12px", flexDirection: "column" }}>
+        <div style={{ display: "flex", width: "300px", height: "100%", padding: "0px 0px 0px 12px", flexDirection: "column" }}>
             <div style={{ width: "100%", height: "48px", display: "flex", alignItems: "center" }}>
                 <Space style={{ flexShrink: 0 }}>
                     <Button icon={<LeftOutlined />} onClick={props.handlePrevPage}></Button>
@@ -35,13 +36,15 @@ const LeftBox: React.FC<LeftBoxProps> = props => {
                     ]} />
                 </Space>
             </div>
-            <ScrollBox style={{ padding: "3px 12px 0px 0px" }}>
-                <List
-                    size="small"
-                    dataSource={props.urls}
-                    renderItem={(item, index) => <List.Item style={props.activeIndex == index ? { color: "#eb2f96" } : undefined} onClick={() => props.onClick(item, index)}>{item[1]}</List.Item>}
-                />
-            </ScrollBox>
+            <Spin spinning={props.spinning} size="large">
+                <ScrollBox style={{ padding: "3px 12px 0px 0px" }}>
+                    <List
+                        size="small"
+                        dataSource={props.urls}
+                        renderItem={(item, index) => <List.Item style={props.activeIndex == index ? { color: "#eb2f96" } : undefined} onClick={() => props.onClick(item, index)}>{item[1]}</List.Item>}
+                    />
+                </ScrollBox>
+            </Spin>
         </div>
     )
 }

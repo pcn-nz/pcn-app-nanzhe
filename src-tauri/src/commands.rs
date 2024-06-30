@@ -8,7 +8,7 @@ use crate::{assignment::AssignmentNode, Assignment};
 use regex::Regex;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
-use tauri::WebviewWindowBuilder;
+use tauri::{http::header::USER_AGENT, WebviewWindowBuilder};
 use tauri_plugin_http::reqwest;
 
 #[derive(Deserialize, Debug, Serialize)]
@@ -73,14 +73,37 @@ pub async fn get_images(
 #[tauri::command]
 pub async fn get_base_url(state: tauri::State<'_, Assignment>) -> Result<String, CommandError> {
     let default_url = &state.assignments[0].url[0];
-    let res = reqwest::get(default_url).await?;
-    let url = res.url();
-    let url_path = url.path().to_string();
-    Ok(format!(
-        "https://{}{}",
-        url.domain().unwrap(),
-        url_path[0..=3].to_string()
-    ))
+    let user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0";
+    let client = reqwest::Client::new();
+    let res = client
+        .get(default_url)
+        .header(USER_AGENT, user_agent)
+        .send()
+        .await;
+    let mut uri = String::new();
+    match res {
+        Ok(resp) => {
+            for ck in resp.cookies() {
+                println!("Cookies: {:?}", ck.value());
+            }
+            uri = format!(
+                "https://{}{}",
+                resp.url().domain().unwrap(),
+                resp.url().path().to_string()[0..=3].to_string()
+            )
+        }
+        Err(e) => {
+            if let Some(url) = e.url() {
+                uri = format!(
+                    "https://{}{}",
+                    url.domain().unwrap(),
+                    url.path().to_string()[0..=3].to_string()
+                )
+            };
+        }
+    }
+
+    Ok(uri)
 }
 
 #[tauri::command]
@@ -140,7 +163,13 @@ pub async fn open_player(app: tauri::AppHandle) -> Result<(), CommandError> {
 }
 
 async fn get_html(url: String) -> Result<Html, reqwest::Error> {
-    let res = reqwest::get(url).await?;
-    let html = Html::parse_document(&res.text().await.unwrap());
+    let user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0";
+    let client = reqwest::Client::new();
+    let res = client
+        .get(url)
+        .header(USER_AGENT, user_agent)
+        .send()
+        .await;
+    let html = Html::parse_document(&res?.text().await.unwrap());
     Ok(html)
 }

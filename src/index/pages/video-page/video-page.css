@@ -30,6 +30,7 @@
     z-index: 500;
     bottom: 0;
     backdrop-filter: blur(10px);
+    font-size: 0.9em;
 }
 
 .list-card .play-icon {

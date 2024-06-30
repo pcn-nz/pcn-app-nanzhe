@@ -13,6 +13,7 @@ import { invoke } from "@tauri-apps/api/core";
 import ConfigPage from "./pages/config-page";
 
 const appWindow = new MainWindow('main');
+
 const App: React.FC = () => {
   const [isMaximized, setIsMaximized] = useState(false);
   const navigate = useNavigate();

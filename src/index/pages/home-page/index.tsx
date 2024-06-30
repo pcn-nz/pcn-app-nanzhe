@@ -8,44 +8,43 @@ import LeftBox from "./left-bar";
 import { invoke } from "@tauri-apps/api/core";
 
 const HomePage: React.FC = () => {
-    let [urls, setUrls] = useState([] as Array<[string, string]>);
-    let [images, setImages] = useState([] as Array<string>);
-    let [activeIndex, setActiveIndex] = useState(undefined as undefined | number);
-    let [baseUrl, setBaseUrl] = useState("");
-    let [pageIndex, setPageIndex] = useState(1);
-    let [spinning, setSpinning] = useState<boolean>(true);
+    const [urls, setUrls] = useState<Array<[string, string]>>([]);
+    const [images, setImages] = useState<Array<string>>([]);
+    const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+    const [pageIndex, setPageIndex] = useState<number>(1);
+    const [spinning, setSpinning] = useState<boolean>(false);
+    const [listSpinning, setListSpinning] = useState<boolean>(false);
     const [title, setTitle] = useState("");
     const [fid, setFid] = useState(14);
+    const [baseUrl, setBaseUrl] = useState<string>("");
 
     useEffect(() => {
+        setListSpinning(true);
         (async () => {
-            try {
-                let baseUrl = await invoke("get_base_url");
-                setBaseUrl(baseUrl as string);
-                getUrls(baseUrl as string, 1, 14);
-            } catch (err) {
+            invoke("get_base_url").then((bu: any) => {
+                setBaseUrl(bu)
+                setTimeout(() => { }, 1000);
+                getUrls(bu as string, 1, 14);
+            }).catch((err) => {
                 message.error(err as any);
-                setSpinning(false);
-            }
+            })
         })();
     }, []);
 
     const getUrls = async (url: string, pageIndex: number, sfid: number) => {
         setUrls([]);
         setActiveIndex(undefined);
-        setSpinning(true);
+        setListSpinning(true);
         try {
-            let res: Array<[string, string]> = await invoke("get_urls", { url: url + "thread1022.php?fid=" + sfid + "&page=" + pageIndex });
+            let res: Array<[string, string]> = await invoke("get_urls", { url: url + "thread.php?fid=" + sfid + "&page=" + pageIndex });
             if (pageIndex == 1) {
                 res.splice(0, 3)
             }
             setUrls(res);
-            setSpinning(false);
         } catch (error) {
-            setSpinning(false);
             message.error(error as any)
         }
-
+        setListSpinning(false);
     }
 
     const getImages = async (item: [string, string], index: number) => {
@@ -64,17 +63,19 @@ const HomePage: React.FC = () => {
     }
 
     const handlePrevPage = async () => {
-        if (pageIndex != 1) {
-            pageIndex -= 1;
-            setPageIndex(pageIndex);
+        let pi = pageIndex;
+        if (pi != 1) {
+            pi -= 1;
+            setPageIndex(pi);
         }
         await getUrls(baseUrl, pageIndex, fid)
     }
 
     const handleNextPage = async () => {
-        pageIndex += 1;
-        setPageIndex(pageIndex);
-        await getUrls(baseUrl, pageIndex, fid);
+        let pi = pageIndex;
+        pi += 1;
+        setPageIndex(pi);
+        await getUrls(baseUrl, pi, fid);
     }
 
     const handleDownload = async () => {
@@ -105,14 +106,15 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="container">
-            <LeftBox onClick={getImages} activeIndex={activeIndex} urls={urls} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} handleChangeChannel={handleChangeChannel} />
+
+            <LeftBox spinning={listSpinning} onClick={getImages} activeIndex={activeIndex} urls={urls} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} handleChangeChannel={handleChangeChannel} />
             <Page header={<Header />} style={{ paddingRight: "8px" }}>
                 <Spin spinning={spinning} size="large">
                     <ScrollBox style={{ padding: "12px" }}>
                         <Flex wrap="wrap" gap="small">
                             <Image.PreviewGroup>
                                 {
-                                    images.map((item, index) => <div key={index} className="list-card list-card-square"><Image src={item} /></div>)
+                                    images.map((item, index) => <div key={index} className="list-card list-card-square" style={{ background: `url(${item})`, backgroundSize: "200%" }}><Image src={item} /></div>)
                                 }
                             </Image.PreviewGroup>
                         </Flex>

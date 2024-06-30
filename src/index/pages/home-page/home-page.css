@@ -8,3 +8,17 @@
 .list-card-square {
     aspect-ratio: 1/1;
 }
+
+.list-card .ant-image {
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.list-card .ant-image img {
+    width: 100%;
+    position: relative !important;
+}
